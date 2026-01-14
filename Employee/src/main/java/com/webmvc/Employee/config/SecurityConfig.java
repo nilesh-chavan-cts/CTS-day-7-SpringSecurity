@@ -26,6 +26,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.webmvc.Employee.serivce.CustomUserDetailsService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -51,7 +53,7 @@ public class SecurityConfig {
 //		
 //		return http.build();
 //	}
-//	
+
 //	@Autowired
 //	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 //		
@@ -64,41 +66,64 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		http.csrf().disable().cors().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-				.and().authorizeRequests().antMatchers("/employee/login").permitAll().anyRequest().authenticated()
-				.and()
-		        .httpBasic();
+	    http
+	        .csrf(csrf -> csrf.disable())
+	        .cors()
+	        .and()
+	        .sessionManagement(session ->
+	            session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+	        )
+	        .authorizeHttpRequests(auth -> auth
+	            .antMatchers("/employee/login").permitAll()
+	            .antMatchers("/employee/register").permitAll()
+	            .antMatchers("/employee/home").hasRole("USER")
+	            .antMatchers("/employee/add").hasRole("USER")
+	            .antMatchers("/employee").hasAnyRole("ADMIN","USER")
+	            .antMatchers("/employee/user").hasRole("ADMIN")
+	            .antMatchers("/department").hasRole("ADMIN")
+	            .anyRequest().authenticated()
+	        );
 
-		return http.build();
+	    return http.build();
 	}
-
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-		return config.getAuthenticationManager();
+	public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder,
+			UserDetailsService userDetailsService) throws Exception {
+
+		AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+
+		builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+
+		return builder.build();
 	}
 
-	@Bean
-	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//	@Bean
+//	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+//		return config.getAuthenticationManager();
+//	}
 
-		UserDetails user = User.withUsername("nilesh").password(passwordEncoder.encode("nilesh")).roles("USER").build();
-		return new InMemoryUserDetailsManager(user);
-	}
+//	@Bean
+//	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//
+//		UserDetails user = User.withUsername("nilesh").password(passwordEncoder.encode("nilesh")).roles("USER").build();
+//		return new InMemoryUserDetailsManager(user);
+//	}
 
-	  @Bean
-	    public ServletContainerInitializer servletContextInitializer() {
-	        return new ServletContainerInitializer() {
-	            public void onStartup(ServletContext servletContext) {
-	                servletContext.setSessionTimeout(1); // minutes
-	            }
-
-				@Override
-				public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
-					// TODO Auto-generated method stub
-					
-				}
-	        };
-	    }
-
+//	  @Bean
+//	    public ServletContainerInitializer servletContextInitializer() {
+//	        return new ServletContainerInitializer() {
+//	            public void onStartup(ServletContext servletContext) {
+//	                servletContext.setSessionTimeout(1); // minutes
+//	            }
+//
+//				@Override
+//				public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//	        };
+//	    }
+//
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 

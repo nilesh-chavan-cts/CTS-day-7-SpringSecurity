@@ -1,8 +1,16 @@
 package com.webmvc.Employee.serivce;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +46,46 @@ public class EmployeeService {
 		return ResponseEntity.ok(employee);
 	}
 	
-	public ResponseEntity<List<Employee>>getAllEmployee(){
+	public ResponseEntity<Page<Employee>>getAllEmployee(String keyword,int page,int size){
 		
+//		Query query = new Query();
+//		Pageable pageable =PageRequest.of(page, size);
+//		
+//	    if (keyword != null && !keyword.isEmpty()) {
+//	        query.addCriteria(new Criteria().orOperator(
+//	            Criteria.where("email").regex(keyword, "i"),
+//	            Criteria.where("firstName").regex(keyword, "i")
+//	        ));
+//	    }
+//
+//	    long total = mongoTemplate.count(query, Employee.class);
+//
+//	    query.with(pageable);
+//
+//	    List<Employee> list = mongoTemplate.find(query, Employee.class);
+//
+////	    return new PageImpl<>(list, pageable, total);
+		
+		  Pageable pageable =PageRequest.of(page, size,Sort.by("firstName"));
+		  
+		  if (keyword == null || keyword.trim().isEmpty()) {
+			  
+		  ResponseEntity.ok(employeeRepository.findAll(pageable));  
+		  } 
+		  return ResponseEntity.ok(employeeRepository.
+		 findByEmailContainingIgnoreCaseOrFirstNameContainingIgnoreCase(keyword,
+		  keyword, pageable));
+		 
+	}
+	
+	public Page<Employee>getAllDepratement(String dept,int page,int size){
+		
+		 Pageable pageable = PageRequest.of(page, size);
+
+	        return employeeRepository.findByDeptIgnoreCase(dept, pageable);
+	}
+	
+	public ResponseEntity<List<Employee>>listOfEmployee(){
 		return ResponseEntity.ok(employeeRepository.findAll());
 	}
 }
