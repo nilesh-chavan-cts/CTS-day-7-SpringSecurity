@@ -4,6 +4,7 @@ package com.webmvc.Employee.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import com.webmvc.Employee.dtos.UserDTO;
 import com.webmvc.Employee.entity.Employee;
 import com.webmvc.Employee.entity.UserRegister;
 import com.webmvc.Employee.serivce.AuthenticationService;
+import com.webmvc.Employee.serivce.EmailService;
 import com.webmvc.Employee.serivce.EmployeeService;
 import com.webmvc.Employee.serivce.UserRegisterService;
 
@@ -36,20 +38,17 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 	@Autowired
 	private UserRegisterService userRegisterService;
-
-	@GetMapping("/home")
-	public ResponseEntity<String>getHome(){
-		
-		return ResponseEntity.ok("Home ");
-	}
+	@Autowired
+	private EmailService emailService;
+	
 	@PostMapping("/register")
-	public ResponseEntity<UserRegister> addUser(@RequestBody UserDTO dto) {
+	public ResponseEntity<?> addUser(@RequestBody @Valid UserDTO dto) {
 		
 		return userRegisterService.addUser(dto);
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody Login login, HttpServletRequest request) {
+	public ResponseEntity<?> login(@RequestBody  Login login, HttpServletRequest request) {
 		return authenticationService.login(login, request);
 	}
 
@@ -58,28 +57,18 @@ public class EmployeeController {
 		return userRegisterService.getAllUser();
 	}
 	
-	
-	/*
-	 * @PostMapping("/login") public ResponseEntity<?>login(@RequestBody Login
-	 * login,HttpServletRequest request){
-	 * 
-	 * Authentication authenticate = authenticationManager.authenticate(new
-	 * UsernamePasswordAuthenticationToken(login.getUsername(),
-	 * login.getPassword()));
-	 * SecurityContextHolder.getContext().setAuthentication(authenticate);
-	 * request.getSession(true); Map<String,String> response = new HashMap<>();
-	 * response.put("message", "Login successful"); response.put("status", "200");
-	 * response.put("timestamp", String.valueOf(LocalDateTime.now())); return
-	 * ResponseEntity.ok().body(response); }
-	 */
-
 	@PostMapping("/add")
-	public ResponseEntity<Employee> addEmployee(@RequestBody EmployeeDTO dto) {
+	public ResponseEntity<Employee> addEmployee(@RequestBody @Valid EmployeeDTO dto) {
 
 		 return employeeService.addEmployee(dto);
 	}
 
-	@GetMapping
+	@GetMapping("/profile/{email}")
+	public ResponseEntity<Employee>getEmloyee(@PathVariable String email){
+		return employeeService.getEmployee(email);
+	}
+	
+	@GetMapping("/employee-list")
 	public ResponseEntity<Page<Employee>> getAllEmployee(@RequestParam(defaultValue = "") String keyword,@RequestParam(defaultValue = "0") int size,
 			@RequestParam(defaultValue = "8") int page) {
 		
@@ -105,4 +94,14 @@ public class EmployeeController {
 	public ResponseEntity<List<Employee>>getAllListOfEmployee(){
 		return employeeService.listOfEmployee();
 	}
+	
+	 @GetMapping("/mail-test/{email}")
+	    public ResponseEntity<String> sendEmail(@PathVariable String email) {
+	        return authenticationService.sendOTP(email);
+	 }
+	 @GetMapping("/otp/{OTP}")
+	 public ResponseEntity<String> OTPVerifiy(@PathVariable String OTP) {
+	        return authenticationService.verifyOTP(OTP);
+	 }
+	 
 }

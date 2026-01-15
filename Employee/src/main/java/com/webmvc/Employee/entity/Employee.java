@@ -26,5 +26,5 @@ public class Employee {
 	private double salary;
 	private String role;
 	private String gender;
-
+	private UserRegister user;
 }

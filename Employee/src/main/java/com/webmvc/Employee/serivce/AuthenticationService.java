@@ -1,5 +1,6 @@
 package com.webmvc.Employee.serivce;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,9 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.stereotype.Service;
 
 import com.webmvc.Employee.dtos.Login;
+import com.webmvc.Employee.entity.OTPVerification;
 import com.webmvc.Employee.repository.LoginRepository;
+import com.webmvc.Employee.repository.OTPVerificationRepository;
 
 @Service
 public class AuthenticationService {
@@ -30,8 +33,16 @@ public class AuthenticationService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private OTPVerificationRepository otpVerificationRepository;
+    
     private static final int MAX_ATTEMPT=5;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final int OTP_LENGTH = 6;
+    private static final int OTP_BOUND = (int) Math.pow(10, OTP_LENGTH);
+    
     
     public ResponseEntity<?> login(Login login,HttpServletRequest request) {
 
@@ -60,6 +71,7 @@ public class AuthenticationService {
     		loginRepository.save(obj);
     		
     		response.put("message", "Login successful");
+    		response.put("email", obj.getEmail());
     		response.put("role", role);
     		response.put("timestamp", String.valueOf(LocalDateTime.now()));
     		
@@ -88,5 +100,46 @@ public class AuthenticationService {
     		return ResponseEntity.ok(response);
     	}
     }
+    
+
+    public ResponseEntity<String>sendOTP(String email){
+    	
+    	
+    	com.webmvc.Employee.entity.Login login =loginRepository.findByEmail(email).orElseThrow(()-> new IllegalArgumentException("Email not Fount..:("));
+    	
+    	String OTP = generateOtp();
+    	emailService.sendOtpEmail(email, OTP);
+    	OTPVerification ver = new OTPVerification();
+    	ver.setCreatedAt(LocalDateTime.now().plusMinutes(1));
+    	ver.setEmail(email);
+    	ver.setOTP(OTP);
+    	ver.setLogin(login);
+    	otpVerificationRepository.save(ver);
+    	return ResponseEntity.ok("OTP Sended...!");
+    }
+    
+    public ResponseEntity<String>verifyOTP(String OTP){
+    	
+    	OTPVerification verifyOTP =  otpVerificationRepository.findByOTP(OTP);
+    	
+    	if(verifyOTP==null)
+    		return ResponseEntity.ok("Wrong OTP");
+    	
+    	if (verifyOTP.getCreatedAt().isBefore(LocalDateTime.now())) {
+    	    return ResponseEntity.ok("OTP expired");
+    	}
+    	
+    	com.webmvc.Employee.entity.Login login = loginRepository.findByEmail(verifyOTP.getEmail()).orElseThrow(()-> new IllegalArgumentException("Email not found in login database"));
+    	login.setReamingAttempt(MAX_ATTEMPT);
+    	login.setStatus(true);
+    	loginRepository.save(login);
+    	
+    	return ResponseEntity.ok("OTP Matched..!");
+    }
+    public static String generateOtp() {
+        int otp = SECURE_RANDOM.nextInt(OTP_BOUND);
+        return String.format("%0" + OTP_LENGTH + "d", otp);
+    }
+
 
 }

@@ -1,7 +1,9 @@
 package com.webmvc.Employee.serivce;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +31,23 @@ public class UserRegisterService {
 		this.loginRepository = loginRepository;
 	}
 	
-	public ResponseEntity<UserRegister>addUser(UserDTO dto){
+	public ResponseEntity<?>addUser(UserDTO dto){
 		
 		UserRegister user = new UserRegister();
 	
-	
+		Map<String, String> response = new HashMap<>();
+		if(userRepository.existsByUsername(dto.getUsername())) {
+			
+			response.put("message", "username already exists");
+			return ResponseEntity.ok(response);
+		}
+		
+		if(userRepository.existsByEmail(dto.getEmail())) {
+			
+			response.put("message", "email already exists");
+			return ResponseEntity.ok(response);
+		}
+		
 		user.setAddress(dto.getAddress());
 		user.setEmail(dto.getEmail());
 		user.setFirstName(dto.getFirstName());
@@ -58,7 +72,9 @@ public class UserRegisterService {
 		login.setRole(user.getRole());
 		login.setStatus(true);
 		login.setUsername(user.getUsername());
+		login.setUser(user);
 		loginRepository.save(login);
+		
 		return ResponseEntity.ok(user);
 	}
 	

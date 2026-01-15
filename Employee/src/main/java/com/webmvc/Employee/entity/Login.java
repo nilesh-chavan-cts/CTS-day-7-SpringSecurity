@@ -26,5 +26,5 @@ public class Login {
 	private boolean status;
 	private LocalDateTime createdAt;
 	private int reamingAttempt;
-	
+	private UserRegister user;
 }

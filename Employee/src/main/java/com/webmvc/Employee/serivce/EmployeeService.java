@@ -16,22 +16,29 @@ import org.springframework.stereotype.Service;
 
 import com.webmvc.Employee.dtos.EmployeeDTO;
 import com.webmvc.Employee.entity.Employee;
+import com.webmvc.Employee.entity.UserRegister;
 import com.webmvc.Employee.repository.EmployeeRepository;
+import com.webmvc.Employee.repository.UserRepository;
 
 @Service
 public class EmployeeService {
 
 	
 	private final EmployeeRepository employeeRepository;
+	private final UserRepository userRepository;
 	@Autowired
-	public EmployeeService(EmployeeRepository employeeRepository) {
+	public EmployeeService(EmployeeRepository employeeRepository,UserRepository userRepository) {
 		super();
 		this.employeeRepository = employeeRepository;
+		this.userRepository = userRepository;
 	}
 	
 	public ResponseEntity<Employee>addEmployee(EmployeeDTO dto){
 		
 		Employee employee = new Employee();
+		System.out.println(dto);
+		UserRegister user=userRepository.findByEmail(dto.getEmail()).orElseThrow(() -> new IllegalArgumentException("please enter register email"));
+		
 		employee.setAddress(dto.getAddress());
 		employee.setDept(dto.getDept());
 		employee.setEmail(dto.getEmail());
@@ -41,6 +48,7 @@ public class EmployeeService {
 		employee.setPhoneNo(dto.getPhoneNo());
 		employee.setRole(dto.getRole());
 		employee.setSalary(dto.getSalary());
+		employee.setUser(user);
 		
 		employeeRepository.save(employee);
 		return ResponseEntity.ok(employee);
@@ -76,6 +84,10 @@ public class EmployeeService {
 		 findByEmailContainingIgnoreCaseOrFirstNameContainingIgnoreCase(keyword,
 		  keyword, pageable));
 		 
+	}
+	
+	public ResponseEntity<Employee>getEmployee(String email){
+		return ResponseEntity.ok(employeeRepository.findByEmail(email));
 	}
 	
 	public Page<Employee>getAllDepratement(String dept,int page,int size){

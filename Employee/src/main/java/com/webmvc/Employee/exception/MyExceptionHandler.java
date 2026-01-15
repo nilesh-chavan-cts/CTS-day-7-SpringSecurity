@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class MyExceptionHandler {
 
 	private int statusCode;
-	private String error;
-	private LocalDateTime timeStemp;
+	private String message;
+	private String timeStemp;
 }

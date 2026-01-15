@@ -11,5 +11,7 @@ import com.webmvc.Employee.entity.UserRegister;
 public interface UserRepository extends MongoRepository<UserRegister, String>{
 
 	Optional<UserRegister> findByUsername(String username);
-	boolean findByEmail(String email);
+	Optional<UserRegister> findByEmail(String email);
+	boolean existsByUsername(String username);
+	boolean existsByEmail(String email);
 }

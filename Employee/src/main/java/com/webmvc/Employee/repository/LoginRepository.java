@@ -11,5 +11,5 @@ import com.webmvc.Employee.entity.Login;
 public interface LoginRepository extends MongoRepository<Login, String>{
 
 	Optional<Login> findByUsername(String username);
-	boolean findByEmail(String email);
+	Optional<Login> findByEmail(String email);
 }
