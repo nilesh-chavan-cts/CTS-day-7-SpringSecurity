@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +24,10 @@ import com.webmvc.Employee.entity.OTPVerification;
 import com.webmvc.Employee.repository.LoginRepository;
 import com.webmvc.Employee.repository.OTPVerificationRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class AuthenticationService {
 
     private static final int MAX_ATTEMPTS = 3;
@@ -70,6 +74,8 @@ public class AuthenticationService {
     		obj.setStatus(true);
     		loginRepository.save(obj);
     		
+    		log.info("AuthenticationService : Login Success full...!");
+    		
     		response.put("message", "Login successful");
     		response.put("email", obj.getEmail());
     		response.put("role", role);
@@ -89,11 +95,16 @@ public class AuthenticationService {
     	    		loginRepository.save(obj);
     			}
     		}else {
+    			
+    			log.info("AuthenticationService : Account is Blocked...!");
+    			
     		response.put("message", "Account is Blocked");
         		response.put("Reaming Attempts", obj.getReamingAttempt());
         		response.put("timestamp", String.valueOf(LocalDateTime.now()));
         		return ResponseEntity.ok(response);
     		}
+    		
+    		log.info("AuthenticationService : wrong password...!");
     		response.put("message", "wrong password");
     		response.put("Reaming_Attempts", obj.getReamingAttempt());
     		response.put("timestamp", String.valueOf(LocalDateTime.now()));
@@ -118,15 +129,23 @@ public class AuthenticationService {
     	return ResponseEntity.ok("OTP Sended...!");
     }
     
-    public ResponseEntity<String>verifyOTP(String OTP){
+    public ResponseEntity<?>verifyOTP(String OTP){
     	
     	OTPVerification verifyOTP =  otpVerificationRepository.findByOTP(OTP);
-    	
-    	if(verifyOTP==null)
-    		return ResponseEntity.ok("Wrong OTP");
+    	Map<String, Object>response = new HashMap<>();
+    	if(verifyOTP==null) {
+    		
+    		response.put("message", "Wrong OTP");
+    		response.put("status",false);
+    		return ResponseEntity.ok(response);
+    		
+    	}
     	
     	if (verifyOTP.getCreatedAt().isBefore(LocalDateTime.now())) {
-    	    return ResponseEntity.ok("OTP expired");
+    		
+    		response.put("message", "OTP expired");
+    		response.put("status", false);
+    	    return ResponseEntity.ok(response);
     	}
     	
     	com.webmvc.Employee.entity.Login login = loginRepository.findByEmail(verifyOTP.getEmail()).orElseThrow(()-> new IllegalArgumentException("Email not found in login database"));
@@ -134,7 +153,12 @@ public class AuthenticationService {
     	login.setStatus(true);
     	loginRepository.save(login);
     	
-    	return ResponseEntity.ok("OTP Matched..!");
+    	response.put("message","OTP Matched..!" );
+    	response.put("status", true);
+    	response.put("email", verifyOTP.getEmail());
+
+    	
+    	return ResponseEntity.ok(response);
     }
     public static String generateOtp() {
         int otp = SECURE_RANDOM.nextInt(OTP_BOUND);

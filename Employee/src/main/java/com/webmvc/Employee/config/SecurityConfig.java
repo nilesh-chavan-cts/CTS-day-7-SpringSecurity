@@ -78,10 +78,12 @@ public class SecurityConfig {
 	            .antMatchers("/employee/register").permitAll()
 	            .antMatchers("/employee/home").hasRole("USER")
 	            .antMatchers("/employee/add").hasRole("USER")
-	            .antMatchers("/employee/profile/**").hasRole("USER")
+//	            .antMatchers("/employee/profile/**").hasRole("USER")
+//	            .antMatchers("/employee/update/**").hasRole("USER")
 	            .antMatchers("/employee/employee-list").hasRole("ADMIN")
 	            .antMatchers("/employee/user").hasRole("ADMIN")
 	            .antMatchers("/department").hasRole("ADMIN")
+	            .antMatchers("/employee//export/department/**").hasRole("ADMIN")
 	            .anyRequest().permitAll()
 	        );
 

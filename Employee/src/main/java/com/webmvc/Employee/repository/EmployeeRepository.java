@@ -17,6 +17,7 @@ public interface EmployeeRepository extends MongoRepository<Employee, String>{
             String firstName,
             Pageable pageable
     );
-	Page<Employee> findByDeptIgnoreCase(String dept, Pageable pageable);
+	List<Employee> findByDeptIgnoreCase(String dept);
+
 	Employee findByEmail(String email);
 }

@@ -1,7 +1,10 @@
 package com.webmvc.Employee.serivce;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,8 +19,10 @@ import org.springframework.stereotype.Service;
 
 import com.webmvc.Employee.dtos.EmployeeDTO;
 import com.webmvc.Employee.entity.Employee;
+import com.webmvc.Employee.entity.Login;
 import com.webmvc.Employee.entity.UserRegister;
 import com.webmvc.Employee.repository.EmployeeRepository;
+import com.webmvc.Employee.repository.LoginRepository;
 import com.webmvc.Employee.repository.UserRepository;
 
 @Service
@@ -26,11 +31,14 @@ public class EmployeeService {
 	
 	private final EmployeeRepository employeeRepository;
 	private final UserRepository userRepository;
+	private final LoginRepository loginRepository;
 	@Autowired
-	public EmployeeService(EmployeeRepository employeeRepository,UserRepository userRepository) {
+	public EmployeeService(EmployeeRepository employeeRepository,UserRepository userRepository
+			,LoginRepository loginRepository) {
 		super();
 		this.employeeRepository = employeeRepository;
 		this.userRepository = userRepository;
+		this.loginRepository = loginRepository;
 	}
 	
 	public ResponseEntity<Employee>addEmployee(EmployeeDTO dto){
@@ -90,14 +98,54 @@ public class EmployeeService {
 		return ResponseEntity.ok(employeeRepository.findByEmail(email));
 	}
 	
-	public Page<Employee>getAllDepratement(String dept,int page,int size){
+	public ResponseEntity<String>deleteEmaployee(String id){
 		
-		 Pageable pageable = PageRequest.of(page, size);
-
-	        return employeeRepository.findByDeptIgnoreCase(dept, pageable);
+		 Employee employee=employeeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Employee not found in findById"));
+		UserRegister user = userRepository.findByEmail(employee.getEmail()).orElseThrow(() -> new IllegalArgumentException("User Register email not found"));
+		Login login = loginRepository.findByEmail(employee.getEmail()).orElseThrow(() -> new IllegalArgumentException("Login email not found"));
+		
+		System.out.println(user);
+		System.out.println(login);
+		userRepository.delete(user);
+		loginRepository.delete(login);
+		employeeRepository.deleteById(id);
+		System.out.println("------------------------------------------------Data delete----------------------------");
+		return ResponseEntity.ok("Delete Employee...!");
 	}
+	
+	public ResponseEntity<?>updateEmployee(String email,EmployeeDTO dto){
+		
+		Map<String, Object>map = new HashMap<>();
+		Employee employee = employeeRepository.findByEmail(email);
+		if(employee==null) {
+			map.put("message", "email not found..!");
+			return ResponseEntity.ok(map);
+		}
+		
+		employee.setAddress(dto.getAddress());
+		employee.setDept(dto.getDept());
+		employee.setEmail(dto.getEmail());
+		employee.setFirstName(dto.getFirstName());
+		employee.setGender(dto.getGender());
+		employee.setLastName(dto.getLastName());
+		employee.setPhoneNo(dto.getPhoneNo());
+		employee.setRole(dto.getRole());
+		employee.setSalary(dto.getSalary());
+		
+		employeeRepository.save(employee);
+		map.put("message", "Employee Updated..!");
+		map.put("employee", employee);
+		return ResponseEntity.ok(map);
+	}
+	
+	public List<Employee> getEmployeesByDeptForExport(String dept) {
+	    return employeeRepository.findByDeptIgnoreCase(dept);
+	}
+
 	
 	public ResponseEntity<List<Employee>>listOfEmployee(){
 		return ResponseEntity.ok(employeeRepository.findAll());
 	}
+	
+	
 }
