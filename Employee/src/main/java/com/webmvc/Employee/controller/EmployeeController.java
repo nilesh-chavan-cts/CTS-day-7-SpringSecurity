@@ -11,7 +11,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 
@@ -36,7 +39,7 @@ import com.webmvc.Employee.serivce.UserRegisterService;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/employee")
+//@RequestMapping("/employee")
 @Slf4j
 public class EmployeeController {
 
@@ -47,13 +50,53 @@ public class EmployeeController {
 	@Autowired
 	private UserRegisterService userRegisterService;
 	
+	
+	
+	//@GetMapping(value ="/api/list-employee", produces = "text/plain")
+	@GetMapping(value = "/api/list-employee", produces = "application/json")
+	public ResponseEntity<List<Employee>> getAllEmployeeInfo() {
+	    return employeeService.listOfEmployee();
+	}
+
+	
+	
+	@GetMapping(value ="/api/hello", produces = "text/plain")
+    public String sayHello() {
+        return "Hello World from Spring REST!";
+    }
+    @PostMapping("/api/login")
+    public ResponseEntity<String> login(@RequestBody Login request) {
+
+    	System.out.println(request+"Request");
+        if ("admin".equals(request.getUsername()) &&
+            "admin123".equals(request.getPassword())) {
+
+            return ResponseEntity.ok("LOGIN_SUCCESS");
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("INVALID_CREDENTIALS");
+    }
+    
+    
+    
+    
+    
+    
+    
+	
+	
+	
+	
+	
+	
 	@PostMapping("/register")
-	public ResponseEntity<?> addUser(@RequestBody @Valid UserDTO dto) {
+	public ResponseEntity<?> addUser(@RequestBody @Valid UserDTO dto) {	
 		log.info("Controller : addUser() method is called..!");
 		return userRegisterService.addUser(dto);
 	}
 
-	@PostMapping("/login")
+	@PostMapping("/employee/login")
 	public ResponseEntity<?> login(@RequestBody  Login login, HttpServletRequest request) {
 		log.info("Controller : login() method is called..!");
 		return authenticationService.login(login, request);

@@ -44,10 +44,10 @@ public class GloableException {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 	}
 	
-//	@ExceptionHandler(Exception.class)
-//	@ResponseStatus(HttpStatus.NOT_FOUND)
-//	public ResponseEntity<MyExceptionHandler>exceptionHandler(Exception e){
-//		new MyExceptionHandler();
-//		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(MyExceptionHandler.builder().statusCode(405).error(e.getMessage()).timeStemp(LocalDateTime.now()).build());
-//	}
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<MyExceptionHandler>exceptionHandler(Exception e){
+		new MyExceptionHandler();
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(MyExceptionHandler.builder().statusCode(405).message(e.getMessage()).timeStemp(String.valueOf(System.currentTimeMillis())).build());
+	}
 }

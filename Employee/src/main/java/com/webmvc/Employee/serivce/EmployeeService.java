@@ -109,7 +109,6 @@ public class EmployeeService {
 		userRepository.delete(user);
 		loginRepository.delete(login);
 		employeeRepository.deleteById(id);
-		System.out.println("------------------------------------------------Data delete----------------------------");
 		return ResponseEntity.ok("Delete Employee...!");
 	}
 	
