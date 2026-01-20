@@ -1,2 +1,2 @@
-var app= angular.module("myApp",["homeModule"]);
-/*var app= angular.module("loginApp",["loginModule"])*/
+/*var app= angular.module("myApp",["homeModule","ui.router"]);*/
+angular.module("myHelloApp",["helloModule","homeModule","loginModule","ui.router"]);

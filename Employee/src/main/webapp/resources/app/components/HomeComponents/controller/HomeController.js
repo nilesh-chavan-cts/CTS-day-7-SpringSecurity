@@ -1,10 +1,23 @@
 angular.module("homeModule").controller("HomeController", HomeController);
 
-function HomeController($scope, $http) {
-	
-	
+function HomeController($scope, $state,HelloFactory) {
 	
 	$scope.employees = [];
+	
+	HelloFactory.home()	
+	.then(function(response) {
+	            // response.data is List<Employee>
+	            $scope.employees = response.data;
+	  })
+	        .catch(function(error) {
+	            console.error(error);
+	            $scope.errorMessage = "Failed to load employee list";
+	 });
+	
+	 
+	 
+	 
+	/*$scope.employees = [];
 	    $scope.errorMessage = "";
 
 	    $http.get("/Springmvc_Mongo/api/list-employee")
@@ -15,7 +28,7 @@ function HomeController($scope, $http) {
 	        .catch(function(error) {
 	            console.error(error);
 	            $scope.errorMessage = "Failed to load employee list";
-	        });
+	        });*/
 	/*$scope.message = "Loading...";
 
 	    $http({

@@ -39,7 +39,7 @@ import com.webmvc.Employee.serivce.UserRegisterService;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-//@RequestMapping("/employee")
+@RequestMapping("/employee")
 @Slf4j
 public class EmployeeController {
 
@@ -53,7 +53,7 @@ public class EmployeeController {
 	
 	
 	//@GetMapping(value ="/api/list-employee", produces = "text/plain")
-	@GetMapping(value = "/api/list-employee", produces = "application/json")
+	@GetMapping(value = "/list-employee", produces = "application/json")
 	public ResponseEntity<List<Employee>> getAllEmployeeInfo() {
 	    return employeeService.listOfEmployee();
 	}
@@ -62,7 +62,7 @@ public class EmployeeController {
 	
 	@GetMapping(value ="/api/hello", produces = "text/plain")
     public String sayHello() {
-        return "Hello World from Spring REST!";
+        return "Hello World from Spring REST Api 1212 !";
     }
     @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestBody Login request) {
@@ -96,7 +96,7 @@ public class EmployeeController {
 		return userRegisterService.addUser(dto);
 	}
 
-	@PostMapping("/employee/login")
+	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody  Login login, HttpServletRequest request) {
 		log.info("Controller : login() method is called..!");
 		return authenticationService.login(login, request);

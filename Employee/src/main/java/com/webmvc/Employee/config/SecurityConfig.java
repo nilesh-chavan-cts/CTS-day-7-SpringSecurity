@@ -76,14 +76,18 @@ public class SecurityConfig {
 	        .authorizeHttpRequests(auth -> auth
 	            .antMatchers("/employee/login").permitAll()
 	            .antMatchers("/employee/register").permitAll()
-	            .antMatchers("/employee/home").hasRole("USER")
-	            .antMatchers("/employee/add").hasRole("USER")
-//	            .antMatchers("/employee/profile/**").hasRole("USER")
-//	            .antMatchers("/employee/update/**").hasRole("USER")
-	            .antMatchers("/employee/employee-list").hasRole("ADMIN")
-	            .antMatchers("/employee/user").hasRole("ADMIN")
-	            .antMatchers("/department").hasRole("ADMIN")
-	            .antMatchers("/employee//export/department/**").hasRole("ADMIN")
+	            .antMatchers("/employee/api/hello").permitAll()
+						/*
+						 * .antMatchers("/employee/add").hasRole("USER") //
+						 * .antMatchers("/employee/profile/**").hasRole("USER") //
+						 * .antMatchers("/employee/update/**").hasRole("USER")
+						 * .antMatchers("/employee/employee-list").hasRole("ADMIN")
+						 * .antMatchers("/employee/user").hasRole("ADMIN")
+						 * .antMatchers("/department").hasRole("ADMIN")
+						 * .antMatchers("/employee//export/department/**").hasRole("ADMIN")
+						 */
+	            .antMatchers("/app/**").permitAll()              // AngularJS files
+	            .antMatchers("/resources/**").permitAll()        // CSS, JS
 	            .anyRequest().permitAll()
 	        );
 
@@ -127,19 +131,19 @@ public class SecurityConfig {
 //	        };
 //	    }
 //
-//	@Bean
-//	public CorsConfigurationSource corsConfigurationSource() {
-//
-//		CorsConfiguration config = new CorsConfiguration();
-//		config.setAllowCredentials(true);
-//		config.addAllowedOrigin("http://localhost:4200");
-//		config.addAllowedHeader("*");
-//		config.addAllowedMethod("*");
-//
-//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//		source.registerCorsConfiguration("/**", config);
-//
-//		return source;
-//	}
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);
+		config.addAllowedOrigin("http://localhost:4200");
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+
+		return source;
+	}
 
 }

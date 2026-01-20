@@ -14,7 +14,12 @@
     <!-- Enable Spring MVC -->
     <mvc:annotation-driven />
 
-    <!-- Scan controllers + config -->
+    <!-- ✅ CORRECT static resource mapping -->
+  <!-- <mvc:resources mapping="/resources/**" location="/resources/" /> -->
+
+	<mvc:resources mapping="/app/**" location="/resources/app/" />
+	
+    <!-- Scan Controllers -->
     <context:component-scan base-package="com.webmvc.Employee" />
 
     <!-- View Resolver -->
