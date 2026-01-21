@@ -1,0 +1,1 @@
+angular.module("myApp",["homeModule","loginModule","AdminModule","registerModule","EmployeeRegisterModule","ui.router","EmailModule"]);

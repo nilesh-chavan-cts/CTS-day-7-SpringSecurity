@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+<meta charset="UTF-8">
+<title>Email Verification</title>
+
+<link rel="stylesheet" href="app/shared/css/email/email.css">
+
+</head>
+
+<body ng-controller="EmailController">
+
+<div class="email-wrapper">
+
+    <div class="email-card">
+        <img src="https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
+             class="logo">
+
+        <h2>Verify your email</h2>
+        <p class="subtitle">
+            Enter your email address to receive a one-time password (OTP).
+        </p>
+
+        <input type="email"
+               placeholder="Email address"
+               ng-model="email"
+               required />
+
+        <button ng-click="sendOtp()" ng-disabled="loading">
+            {{ loading ? 'Sending...' : 'Send OTP' }}
+        </button>
+
+        <p class="message">{{message}}</p>
+
+        <div class="footer">
+            <a href="#">Privacy</a>
+            <a href="#">Help</a>
+            <a href="#">Terms</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -58,47 +58,21 @@ public class EmployeeController {
 	    return employeeService.listOfEmployee();
 	}
 
-	
-	
 	@GetMapping(value ="/api/hello", produces = "text/plain")
     public String sayHello() {
         return "Hello World from Spring REST Api 1212 !";
     }
-    @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody Login request) {
-
-    	System.out.println(request+"Request");
-        if ("admin".equals(request.getUsername()) &&
-            "admin123".equals(request.getPassword())) {
-
-            return ResponseEntity.ok("LOGIN_SUCCESS");
-        }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("INVALID_CREDENTIALS");
-    }
-    
-    
-    
-    
-    
-    
-    
-	
-	
-	
-	
-	
-	
 	@PostMapping("/register")
 	public ResponseEntity<?> addUser(@RequestBody @Valid UserDTO dto) {	
 		log.info("Controller : addUser() method is called..!");
 		return userRegisterService.addUser(dto);
+
 	}
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody  Login login, HttpServletRequest request) {
 		log.info("Controller : login() method is called..!");
+		
 		return authenticationService.login(login, request);
 	}
 
@@ -122,7 +96,7 @@ public class EmployeeController {
 	
 	@GetMapping("/employee-list")
 	public ResponseEntity<Page<Employee>> getAllEmployee(@RequestParam(defaultValue = "") String keyword,@RequestParam(defaultValue = "0") int size,
-			@RequestParam(defaultValue = "8") int page) {
+			@RequestParam(defaultValue = "1") int page) {
 		log.info("Controller : getAllEmployee() method is called..!");
 		return employeeService.getAllEmployee(keyword,page,size);
 	}

@@ -66,33 +66,29 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-	    http
-	        .csrf(csrf -> csrf.disable())
-	        .cors()
-	        .and()
-	        .sessionManagement(session ->
-	            session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-	        )
-	        .authorizeHttpRequests(auth -> auth
-	            .antMatchers("/employee/login").permitAll()
-	            .antMatchers("/employee/register").permitAll()
-	            .antMatchers("/employee/api/hello").permitAll()
-						/*
-						 * .antMatchers("/employee/add").hasRole("USER") //
-						 * .antMatchers("/employee/profile/**").hasRole("USER") //
-						 * .antMatchers("/employee/update/**").hasRole("USER")
-						 * .antMatchers("/employee/employee-list").hasRole("ADMIN")
-						 * .antMatchers("/employee/user").hasRole("ADMIN")
-						 * .antMatchers("/department").hasRole("ADMIN")
-						 * .antMatchers("/employee//export/department/**").hasRole("ADMIN")
-						 */
-	            .antMatchers("/app/**").permitAll()              // AngularJS files
-	            .antMatchers("/resources/**").permitAll()        // CSS, JS
-	            .anyRequest().permitAll()
-	        );
+		http.csrf(csrf -> csrf.disable()).cors().and()
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+				.authorizeHttpRequests(
+						auth -> auth
+								.antMatchers("/employee/login").permitAll()
+								.antMatchers("/employee/register").permitAll()
+								.antMatchers("/employee/mail-test/**").permitAll()
+								.antMatchers("/employee/add").hasRole("USER") //
+								.antMatchers("/employee/profile/**").hasRole("USER") //
+								.antMatchers("/employee/update/**").hasAnyRole("USER","ADMIN")
+								.antMatchers("/employee/employee-list").hasRole("ADMIN")
+								.antMatchers("/employee/user").hasRole("ADMIN")
+								.antMatchers("/department").hasRole("ADMIN")
+								.antMatchers("/employee/export/department/**").hasRole("ADMIN")
+								/* .antMatchers("/export/department/**").hasRole("ADMIN") */
+								// 🔓 ANGULAR STATIC FILES (VERY IMPORTANT)
+								.antMatchers("/", "/index.jsp", "/app/**", "/components/**", "/js/**", "/css/**",
+										"/**/*.html", "/**/*.js", "/**/*.css")
+								.permitAll().anyRequest().authenticated());
 
-	    return http.build();
+		return http.build();
 	}
+
 	@Bean
 	public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder,
 			UserDetailsService userDetailsService) throws Exception {
