@@ -1,32 +1,22 @@
 package com.webmvc.Employee.config;
 
-import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.ServletContainerInitializer;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.webmvc.Employee.serivce.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -84,7 +74,22 @@ public class SecurityConfig {
 								// 🔓 ANGULAR STATIC FILES (VERY IMPORTANT)
 								.antMatchers("/", "/index.jsp", "/app/**", "/components/**", "/js/**", "/css/**",
 										"/**/*.html", "/**/*.js", "/**/*.css")
-								.permitAll().anyRequest().authenticated());
+								.permitAll().anyRequest().authenticated())
+				
+				
+				 // Add this AccessDeniedHandler
+				.exceptionHandling(exception -> 
+			    exception
+			        .accessDeniedHandler((request, response, accessDeniedException) -> {
+			            // For Angular SPA, return JSON 403 instead of default HTML page
+			            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			            response.setContentType("application/json");
+			            response.getWriter().write("{\"error\":\"Access Denied\"}");
+			        })
+			);
+	
+
+		        
 
 		return http.build();
 	}

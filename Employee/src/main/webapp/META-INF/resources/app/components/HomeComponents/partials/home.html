@@ -1,120 +1,101 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="myApp">
-<head>
-<meta charset="UTF-8">
-<title>Employee Dashboard</title>
+<div ng-app="myApp" ng-controller="HomeController">
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+	<!-- NAVBAR -->
+	<div class="navbar">
+		<div class="logo">EmployeeCorp</div>
 
-<script src="/Springmvc_Mongo/app/app.js"></script>
-<script src="/Springmvc_Mongo/app/components/HomeComponents/home.module.js"></script>
-<script src="/Springmvc_Mongo/app/components/HomeComponents/controller/HomeController.js"></script>
+		<div class="nav-actions">
+			<a class="btn btn-success" ui-sref="add-employee">Add Employee</a>
+ 		<!-- PROFILE ICON -->
+			<div class="profile-icon" ng-if="isLoggedIn" ng-click="openProfile()">
+				{{ email.charAt(0) | uppercase }}</div> 
+			<!-- LOGIN -->
+			<button class="btn btn-login" ng-if="!isLoggedIn"
+				ng-click="goLogin()">Login</button>
+		</div>
+	</div>
 
-   <link rel="stylesheet" href="app/shared/css/Home/home.css">
-</head>
+	<!-- HERO -->
+	<section class="hero">
+		<h1>Welcome to Employee Dashboard</h1>
+		<p>Manage employees, track organizational growth, and maintain
+			employee records efficiently.</p>
+	</section>
 
-<body ng-controller="HomeController">
+	<!-- CARDS -->
+	<section class="cards">
+		<div class="card">
+			<h3>Total Employees</h3>
+			<p>250+</p>
+		</div>
+		<div class="card">
+			<h3>Departments</h3>
+			<p>12</p>
+		</div>
+		<div class="card">
+			<h3>Active Projects</h3>
+			<p>18</p>
+		</div>
+		<div class="card">
+			<h3>HR Requests</h3>
+			<p>7 Pending</p>
+		</div>
+		<div class="card">
+			<h3>Monthly Hiring</h3>
+			<p>15 New</p>
+		</div>
+		<div class="card">
+			<h3>Performance</h3>
+			<p>Excellent</p>
+		</div>
+	</section>
 
-<!-- NAVBAR -->
-<div class="navbar">
-    <div class="logo">EmployeeCorp</div>
+	<!-- IMAGES -->
+	<section class="image-section">
+		<img
+			src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d">
+		<img
+			src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c">
+		<img
+			src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4">
+	</section>
 
-    <div class="nav-actions">
-        <a class="btn btn-success" ui-sref="add-employee">Add Employee</a>
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
 
-        <!-- PROFILE ICON -->
-        <div class="profile-icon"
-             ng-if="isLoggedIn"
-             ng-click="openProfile()">
-            {{ email.charAt(0) | uppercase }}
-        </div>
+      <div class="modal-header">
+        <h5 class="modal-title">Employee Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
 
-        <!-- LOGIN -->
-        <button class="btn btn-login"
-                ng-if="!isLoggedIn"
-                ng-click="goLogin()">
-            Login
-        </button>
-    </div>
-</div>
-
-
-<!-- HERO -->
-<section class="hero">
-    <h1>Welcome to Employee Dashboard</h1>
-    <p>
-        Manage employees, track organizational growth, and maintain employee
-        records efficiently. Our platform provides seamless employee management
-        with modern UI and enterprise-grade performance.
-    </p>
-    <p>
-        Designed for scalability and ease of use, this dashboard helps
-        corporations handle employee data securely and professionally.
-    </p>
-</section>
-
-<!-- CARDS -->
-<section class="cards">
-    <div class="card">
-        <h3>Total Employees</h3>
-        <p>250+</p>
-    </div>
-    <div class="card">
-        <h3>Departments</h3>
-        <p>12</p>
-    </div>
-    <div class="card">
-        <h3>Active Projects</h3>
-        <p>18</p>
-    </div>
-    <div class="card">
-        <h3>HR Requests</h3>
-        <p>7 Pending</p>
-    </div>
-    <div class="card">
-        <h3>Monthly Hiring</h3>
-        <p>15 New</p>
-    </div>
-    <div class="card">
-        <h3>Performance</h3>
-        <p>Excellent</p>
-    </div>
-</section>
-
-<!-- IMAGES -->
-<section class="image-section">
-    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d">
-    <img src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c">
-     <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4">
-</section>
-
-<!-- PROFILE MODAL -->
-<div class="modal-bg" ng-show="showProfile">
-    <div class="modal">
-        <h3>Employee Profile</h3>
-
+      <div class="modal-body">
         <p><b>Name:</b> {{profile.firstName}} {{profile.lastName}}</p>
-        <p><b>Email:</b> {{profile.email}}</p>
+        <p><b>Email:</b> {{profile.email}}<//* AngularJS hide support */
+.ng-hide {
+	display: none !important;
+} p>
         <p><b>Department:</b> {{profile.dept}}</p>
         <p><b>Role:</b> {{profile.role}}</p>
         <p><b>Phone:</b> {{profile.phoneNo}}</p>
+      </div>
 
-        <div class="modal-actions">
-            <button class="btn btn-primary" ng-click="showProfile=false">Close</button>
-            <button class="btn btn-danger" ng-click="logout()">Logout</button>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-danger" ng-click="logout()">Logout</button>
+      </div>
+
     </div>
+  </div>
 </div>
 
-<!-- FOOTER -->
-<footer>
-    <p>© 2026 EmployeeCorp. All Rights Reserved.</p>
-    <div class="footer-links">
-        <a href="#">Google</a>
-        <a href="#">Instagram</a>
-        <a href="#">WhatsApp</a>
-    </div>
-</footer>
 
-</body>
-</html>
+	<!-- FOOTER -->
+	<footer>
+		<p>© 2026 EmployeeCorp. All Rights Reserved.</p>
+	</footer>
+
+</div>

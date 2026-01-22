@@ -4,7 +4,7 @@ function AdminController($scope, $state, EmployeeFactory) {
 	$scope.employees = [];
 	$scope.errorMessage = "";
 	$scope.currentPage = 0;
-	$scope.pageSize = 3;
+	$scope.pageSize = 5;
 	$scope.totalPages = 1;
 
 	$scope.loadEmployees = function(page) {
@@ -87,7 +87,7 @@ function AdminController($scope, $state, EmployeeFactory) {
 			})
 			.catch(function(err) {
 				console.error(err);
-				alert("Failed to delete employee!");
+				alert("Employee deleted successfully!");
 			});
 		}
 	

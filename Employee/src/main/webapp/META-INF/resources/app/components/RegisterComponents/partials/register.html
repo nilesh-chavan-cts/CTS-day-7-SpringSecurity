@@ -1,48 +1,97 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="myApp">
-<head>
-<meta charset="UTF-8">
-<title>Create Account</title>
+<div>
 
-<link rel="stylesheet" href="app/shared/css/Register/register.css">
+	<div class="auth-page">
+		<div class="card shadow-lg border-0"
+			style="max-width: 500px; width: 100%;">
+			<div class="card-body p-4">
 
-</head>
-<body ng-controller="RegisterController">
+				<!-- Logo -->
+				<div class="text-center mb-3">
+					<div class="fw-semibold fs-4">
+						<span class="text-primary">My</span>App
+					</div>
+				</div>
 
-    <div class="register-card">
+				<h4 class="fw-normal text-center mb-1">Create your account</h4>
+				<p class="text-muted text-center mb-4">It’s quick and easy</p>
 
-        <h2>Create your account</h2>
-        <p class="subtitle">It’s quick and easy</p>
+				<!-- FORM -->
+				<form ng-submit="register()">
 
-        <form ng-submit="register()" class="register-form">
+					<!-- First + Last Name -->
+					<div class="row g-3 mb-3">
+						<div class="col-md-6">
+							<div class="form-floating">
+								<input type="text" class="form-control" placeholder="First name"
+									ng-model="registerData.firstName" required> <label>First
+									name</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-floating">
+								<input type="text" class="form-control" placeholder="Last name"
+									ng-model="registerData.lastName" required> <label>Last
+									name</label>
+							</div>
+						</div>
+					</div>
 
-            <div class="row">
-                <input type="text" ng-model="registerData.firstName" placeholder="First name" required>
-                <input type="text" ng-model="registerData.lastName" placeholder="Last name" required>
-            </div>
+					<!-- Username -->
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" placeholder="Username"
+							ng-model="registerData.username" required> <label>Username</label>
+					</div>
 
-            <input type="text" ng-model="registerData.username" placeholder="Username" required>
+					<!-- Email -->
+					<div class="form-floating mb-3">
+						<input type="email" class="form-control"
+							placeholder="Email address" ng-model="registerData.email"
+							required> <label>Email address</label>
+					</div>
 
-            <input type="email" ng-model="registerData.email" placeholder="Email address" required>
+					<!-- Phone -->
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" placeholder="Phone number"
+							ng-model="registerData.phoneNo"> <label>Phone
+							number</label>
+					</div>
 
-            <input type="text" ng-model="registerData.phoneNo" placeholder="Phone number">
+					<!-- Address -->
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" placeholder="Address"
+							ng-model="registerData.address"> <label>Address</label>
+					</div>
 
-            <input type="text" ng-model="registerData.address" placeholder="Address">
+					<!-- Password -->
+					<div class="form-floating mb-4">
+						<input type="password" class="form-control" placeholder="Password"
+							ng-model="registerData.password" required> <label>Password</label>
+					</div>
 
-            <input type="password" ng-model="registerData.password" placeholder="Password" required>
+					<!-- Button -->
+					<button type="submit" class="btn btn-primary w-100">
+						Create Account</button>
 
-            <button type="submit">Create Account</button>
+				</form>
 
-        </form>
+				<!-- Message -->
+				<div style="color:red" ng-if="message" class="alert mt-4 py-2"
+					ng-class="{
+                   'alert-success': message.includes('Success'),
+                   'alert-danger': message.includes('Fail')
+                 }">
+					{{ message }}</div>
 
-        <p class="login-link">
-            Already have an account?
-            <a ui-sref="login">Sign in</a>
-        </p>
+				<!-- Footer -->
+				<div class="text-center mt-4">
+					<span class="text-muted">Already have an account?</span> <a
+						ui-sref="login" class="text-decoration-none fw-semibold ms-1">
+						Sign in </a>
+				</div>
 
-        <p class="message">{{ message }}</p>
+			</div>
+		</div>
+	</div>
 
-    </div>
+</div>
 
-</body>
-</html>

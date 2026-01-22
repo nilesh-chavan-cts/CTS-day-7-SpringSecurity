@@ -1,45 +1,53 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="myApp">
-<head>
-<meta charset="UTF-8">
-<title>Email Verification</title>
 
-<link rel="stylesheet" href="app/shared/css/email/email.css">
+<div>
 
-</head>
+	<div class="auth-page">
+		<div class="card shadow-lg border-0"
+			style="max-width: 420px; width: 100%;">
+			<div class="card-body p-4 text-center">
 
-<body ng-controller="EmailController">
+				<!-- Google-style logo -->
+				<img
+					src="https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
+					class="mb-4" style="height: 30px">
 
-<div class="email-wrapper">
+				<h4 class="fw-normal mb-1">Verify your email</h4>
+				<p class="text-muted mb-4">Enter your email address to receive a
+					one-time password (OTP)</p>
 
-    <div class="email-card">
-        <img src="https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
-             class="logo">
+				<!-- FORM -->
+				<form ng-submit="sendOtp()">
 
-        <h2>Verify your email</h2>
-        <p class="subtitle">
-            Enter your email address to receive a one-time password (OTP).
-        </p>
+					<div class="form-floating mb-4 text-start">
+						<input type="email" class="form-control" id="email"
+							placeholder="Email address" ng-model="email" required> <label
+							for="email">Email address</label>
+					</div>
 
-        <input type="email"
-               placeholder="Email address"
-               ng-model="email"
-               required />
+					<button type="submit" class="btn btn-primary w-100"
+						ng-disabled="loading">
+						<span ng-if="!loading">Send OTP</span> <span ng-if="loading">Sending...</span>
+					</button>
+				</form>
 
-        <button ng-click="sendOtp()" ng-disabled="loading">
-            {{ loading ? 'Sending...' : 'Send OTP' }}
-        </button>
+				<!-- MESSAGE -->
+				<div ng-if="message" class="alert mt-4 py-2"
+					ng-class="{
+                   'alert-success': message.includes('OTP'),
+                   'alert-danger': message.includes('Failed')
+                 }">
+					{{ message }}</div>
 
-        <p class="message">{{message}}</p>
+				<!-- Footer -->
+				<div class="d-flex justify-content-center gap-3 mt-4 small">
+					<a href="#" class="text-muted text-decoration-none">Privacy</a> <a
+						href="#" class="text-muted text-decoration-none">Help</a> <a
+						href="#" class="text-muted text-decoration-none">Terms</a>
+				</div>
 
-        <div class="footer">
-            <a href="#">Privacy</a>
-            <a href="#">Help</a>
-            <a href="#">Terms</a>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 
 </div>
 
-</body>
-</html>

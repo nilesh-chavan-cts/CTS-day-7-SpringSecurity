@@ -1,128 +1,133 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="myApp">
-<head>
-    <meta charset="UTF-8">
-    <title>Employee Dashboard</title>
+<div>
 
-    <!-- AngularJS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+	<div class="container mx-auto mt-8">
 
-    <!-- Your main app module -->
-    <script src="/Springmvc_Mongo/app/app.js"></script>
+		<h1>Employee Dashboard</h1>
 
-    <!-- Home Module -->
-    <script src="/Springmvc_Mongo/app/components/AdminComponents/admin.module.js"></script>
+		<div class="button-group mb-4 justify-end">
+			<!-- <a ui-sref="add-employee" class="btn btn-add">Add Employee</a> -->
+			<a href="/Springmvc_Mongo/employee/export/department/IT"
+				class="btn btn-primary btn-export">Export CSV</a>
+		</div>
 
-    <!-- Controllers -->
-    <script src="/Springmvc_Mongo/app/components/AdminComponents/controller/AdminController.js"></script>
-	  <link rel="stylesheet" href="app/shared/css/Admin/admin.css">
-</head>
-<body ng-controller="AdminController">
+		<!-- Search Field -->
+		<input type="text" class="search-input" ng-model="searchText"
+			placeholder="Search employees...">
 
-<div class="container mx-auto mt-8">
+		<div class="table-container">
+			<table>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Email</th>
+						<th>Dept</th>
+						<th>Phone</th>
+						<th>Address</th>
+						<th>Role</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody ng-if="employees.length > 0">
+					<tr ng-repeat="emp in employees | filter:searchText">
+						<td>{{emp.id}}</td>
+						<td>{{emp.firstName}}</td>
+						<td>{{emp.lastName}}</td>
+						<td>{{emp.email}}</td>
+						<td>{{emp.dept}}</td>
+						<td>{{emp.phoneNo}}</td>
+						<td>{{emp.address}}</td>
+						<td>{{emp.role}}</td>
+						<td class="button-group">
+							<button class="btn btn-sm btn-primary" ng-click="viewEmployee(emp)">View</button>
+							<button class="btn btn-sm btn-warning" ng-click="editEmployee(emp)">Edit</button>
+							<button class="btn btn-sm btn-danger" ng-click="deleteEmployee(emp)">Delete</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p class="text-center mt-4"
+				ng-if="employees.length==0 && !errorMessage">No employees found.</p>
+		</div>
 
-    <h1>Employee Dashboard</h1>
+		<!-- Pagination -->
+		<div class="pagination">
+			<button class="btn btn-cancel" ng-disabled="currentPage==0"
+				ng-click="prevPage()">Prev</button>
+			<span>Page {{currentPage+1}} of {{totalPages}}</span>
+			<button class="btn btn-cancel"
+				ng-disabled="currentPage >= totalPages-1" ng-click="nextPage()">Next</button>
+		</div>
+	</div>
 
-    <div class="button-group mb-4 justify-end">
-        <a ui-sref="add-employee" class="btn btn-add">Add Employee</a>
-        <a href="/Springmvc_Mongo/employee/export/department/IT" class="btn btn-export">Export CSV</a>
-    </div>
+	<!-- View Modal -->
+	<div ng-show="showViewModal" class="modal-bg">
+		<div class="modal-card">
+			<div class="modal-header">
+				<h3>Employee Details</h3>
+				<span class="modal-close" ng-click="showViewModal=false">&times;</span>
+			</div>
+			<div class="modal-body">
+				<p>
+					<strong>First Name:</strong> {{selectedEmployee.firstName}}
+				</p>
+				<p>
+					<strong>Last Name:</strong> {{selectedEmployee.lastName}}
+				</p>
+				<p>
+					<strong>Email:</strong> {{selectedEmployee.email}}
+				</p>
+				<p>
+					<strong>Phone:</strong> {{selectedEmployee.phoneNo}}
+				</p>
+				<p>
+					<strong>Dept:</strong> {{selectedEmployee.dept}}
+				</p>
+				<p>
+					<strong>Role:</strong> {{selectedEmployee.role}}
+				</p>
+				<p>
+					<strong>Salary:</strong> {{selectedEmployee.salary}}
+				</p>
+				<p>
+					<strong>Address:</strong> {{selectedEmployee.address}}
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-cancel" ng-click="showViewModal=false">Close</button>
+			</div>
+		</div>
+	</div>
 
-    <!-- Search Field -->
-    <input type="text" class="search-input" ng-model="searchText" placeholder="Search employees...">
+	<!-- Edit Modal -->
+	<div ng-show="showEditModal" class="modal-bg">
+		<div class="modal-card">
+			<div class="modal-header">
+				<h3>Edit Employee</h3>
+				<span class="modal-close" ng-click="showEditModal=false">&times;</span>
+			</div>
+			<div class="modal-body">
+				<form>
+					<input type="text" ng-model="selectedEmployee.firstName"
+						placeholder="First Name"> <input type="text"
+						ng-model="selectedEmployee.lastName" placeholder="Last Name">
+					<input type="email" ng-model="selectedEmployee.email"
+						placeholder="Email"> <input type="text"
+						ng-model="selectedEmployee.phoneNo" placeholder="Phone"> <input
+						type="text" ng-model="selectedEmployee.dept" placeholder="Dept">
+					<input type="text" ng-model="selectedEmployee.role"
+						placeholder="Role"> <input type="number"
+						ng-model="selectedEmployee.salary" placeholder="Salary"> <input
+						type="text" ng-model="selectedEmployee.address"
+						placeholder="Address">
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-save" ng-click="updateEmployee()">Save</button>
+				<button class="btn btn-cancel" ng-click="showEditModal=false">Cancel</button>
+			</div>
+		</div>
+	</div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Dept</th>
-                    <th>Phone</th>
-                    <th>Address</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody ng-if="employees.length > 0">
-                <tr ng-repeat="emp in employees | filter:searchText">
-                    <td>{{emp.id}}</td>
-                    <td>{{emp.firstName}}</td>
-                    <td>{{emp.lastName}}</td>
-                    <td>{{emp.email}}</td>
-                    <td>{{emp.dept}}</td>
-                    <td>{{emp.phoneNo}}</td>
-                    <td>{{emp.address}}</td>
-                    <td>{{emp.role}}</td>
-                    <td class="button-group">
-                        <button class="btn btn-view" ng-click="viewEmployee(emp)">View</button>
-                        <button class="btn btn-edit" ng-click="editEmployee(emp)">Edit</button>
-                        <button class="btn btn-delete" ng-click="deleteEmployee(emp)">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <p class="text-center mt-4" ng-if="employees.length==0 && !errorMessage">No employees found.</p>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination">
-        <button class="btn btn-cancel" ng-disabled="currentPage==0" ng-click="prevPage()">Prev</button>
-        <span>Page {{currentPage+1}} of {{totalPages}}</span>
-        <button class="btn btn-cancel" ng-disabled="currentPage >= totalPages-1" ng-click="nextPage()">Next</button>
-    </div>
 </div>
-
-<!-- View Modal -->
-<div ng-show="showViewModal" class="modal-bg">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3>Employee Details</h3>
-            <span class="modal-close" ng-click="showViewModal=false">&times;</span>
-        </div>
-        <div class="modal-body">
-            <p><strong>First Name:</strong> {{selectedEmployee.firstName}}</p>
-            <p><strong>Last Name:</strong> {{selectedEmployee.lastName}}</p>
-            <p><strong>Email:</strong> {{selectedEmployee.email}}</p>
-            <p><strong>Phone:</strong> {{selectedEmployee.phoneNo}}</p>
-            <p><strong>Dept:</strong> {{selectedEmployee.dept}}</p>
-            <p><strong>Role:</strong> {{selectedEmployee.role}}</p>
-            <p><strong>Salary:</strong> {{selectedEmployee.salary}}</p>
-            <p><strong>Address:</strong> {{selectedEmployee.address}}</p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-cancel" ng-click="showViewModal=false">Close</button>
-        </div>
-    </div>
-</div>
-
-<!-- Edit Modal -->
-<div ng-show="showEditModal" class="modal-bg">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3>Edit Employee</h3>
-            <span class="modal-close" ng-click="showEditModal=false">&times;</span>
-        </div>
-        <div class="modal-body">
-            <form>
-                <input type="text" ng-model="selectedEmployee.firstName" placeholder="First Name">
-                <input type="text" ng-model="selectedEmployee.lastName" placeholder="Last Name">
-                <input type="email" ng-model="selectedEmployee.email" placeholder="Email">
-                <input type="text" ng-model="selectedEmployee.phoneNo" placeholder="Phone">
-                <input type="text" ng-model="selectedEmployee.dept" placeholder="Dept">
-                <input type="text" ng-model="selectedEmployee.role" placeholder="Role">
-                <input type="number" ng-model="selectedEmployee.salary" placeholder="Salary">
-                <input type="text" ng-model="selectedEmployee.address" placeholder="Address">
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-save" ng-click="updateEmployee()">Save</button>
-            <button class="btn btn-cancel" ng-click="showEditModal=false">Cancel</button>
-        </div>
-    </div>
-</div>
-
-</body>
-</html>

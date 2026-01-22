@@ -1,68 +1,100 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="myApp">
-<head>
-    <meta charset="UTF-8">
-    <title>Register Employee</title>
 
-    <!-- AngularJS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<di class="auth-page">
 
-    <!-- Your app modules -->
-    <script src="/Springmvc_Mongo/app/app.js"></script>
-    <script src="/Springmvc_Mongo/app/components/HomeComponents/home.module.js"></script>
-    <script src="/Springmvc_Mongo/app/components/HomeComponents/controller/EmployeeRegisterController.js"></script>
+	<div
+		class="d-flex justify-content-center align-items-start min-vh-100 py-5">
+		<div class="card shadow-lg w-100" style="max-width: 600px;">
+			<div class="card-body p-4">
 
-    <!-- Styles -->
-        <link rel="stylesheet" href="app/shared/css/Employee Register/employeeRegister.css">
-</head>
-<body ng-controller="EmployeeRegisterController">
+				<h3 class="text-center fw-bold mb-3">Register New Employee</h3>
+				<p class="text-muted text-center mb-4">Fill out the employee
+					details</p>
 
-<div class="container">
-    <h1>Register New Employee</h1>
+				<form name="employeeForm" ng-submit="registerEmployee()" novalidate>
 
-    <form name="employeeForm" ng-submit="registerEmployee()" novalidate>
+					<div class="row g-3 mb-3">
+						<div class="col-md-6">
+							<div class="form-floating">
+								<input type="text" class="form-control" id="firstName"
+									placeholder="First Name" ng-model="employee.firstName" required>
+								<label for="firstName">First Name</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-floating">
+								<input type="text" class="form-control" id="lastName"
+									placeholder="Last Name" ng-model="employee.lastName" required>
+								<label for="lastName">Last Name</label>
+							</div>
+						</div>
+					</div>
 
-        <label for="firstName">First Name</label>
-        <input type="text" id="firstName" ng-model="employee.firstName" placeholder="Enter first name" required>
+					<div class="form-floating mb-3">
+						<input type="email" class="form-control" id="email"
+							placeholder="Email" ng-model="employee.email" required> <label
+							for="email">Email</label>
+					</div>
 
-        <label for="lastName">Last Name</label>
-        <input type="text" id="lastName" ng-model="employee.lastName" placeholder="Enter last name" required>
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" id="phoneNo"
+							placeholder="Phone Number" ng-model="employee.phoneNo" required>
+						<label for="phoneNo">Phone Number</label>
+					</div>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" ng-model="employee.email" placeholder="Enter email" required>
+					<div class="form-floating mb-3">
+						<select class="form-select" id="dept" ng-model="employee.dept"
+							required>
+							<option value="" disabled selected>Select Department</option>
+							<option value="IT">IT</option>
+							<option value="NON-IT">NON-IT</option>
+						</select> <label for="dept">Department</label>
+					</div>
 
-        <label for="phoneNo">Phone Number</label>
-        <input type="text" id="phoneNo" ng-model="employee.phoneNo" placeholder="Enter phone number" required>
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" id="role"
+							placeholder="Role" ng-model="employee.role" required> <label
+							for="role">Role</label>
+					</div>
 
-        <label for="dept">Department</label>
-        <select id="dept" ng-model="employee.dept" required>
-            <option value="">Select Department</option>
-            <option value="IT">IT</option>
-            <option value="NON-IT">NON-IT</option>
-        </select>
+					<div class="form-floating mb-3">
+						<input type="number" class="form-control" id="salary"
+							placeholder="Salary" ng-model="employee.salary" required>
+						<label for="salary">Salary</label>
+					</div>
 
-        <label for="role">Role</label>
-        <input type="text" id="role" ng-model="employee.role" placeholder="Enter role" required>
+					<div class="form-floating mb-3">
+						<select class="form-select" id="gender" ng-model="employee.gender"
+							required>
+							<option value="" disabled selected>Select Gender</option>
+							<option value="Male">Male</option>
+							<option value="Female">Female</option>
+						</select> <label for="gender">Gender</label>
+					</div>
 
-        <label for="salary">Salary</label>
-        <input type="number" id="salary" ng-model="employee.salary" placeholder="Enter salary" required>
+					<div class="form-floating mb-4">
+						<input type="text" class="form-control" id="address"
+							placeholder="Address" ng-model="employee.address" required>
+						<label for="address">Address</label>
+					</div>
 
-        <label for="gender">Gender</label>
-        <select id="gender" ng-model="employee.gender" required>
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select>
+					<div class="d-flex justify-content-center gap-3">
+						<button type="submit" class="btn btn-primary w-50">Register</button>
+						<button type="button" class="btn btn-secondary w-50"
+							ng-click="resetForm()">Cancel</button>
+					</div>
 
-        <label for="address">Address</label>
-        <input type="text" id="address" ng-model="employee.address" placeholder="Enter address" required>
+					<!-- AngularJS message -->
+					<div ng-if="message" class="alert mt-3 py-2 text-center"
+						ng-class="{
+                        'alert-success': message.includes('Success'),
+                        'alert-danger': message.includes('Fail')
+                     }">
+						{{ message }}</div>
 
-        <div class="text-center mt-4">
-            <button type="submit" class="btn btn-submit">Register</button>
-            <button type="button" class="btn btn-cancel" ng-click="resetForm()">Cancel</button>
-        </div>
-    </form>
+				</form>
+			</div>
+		</div>
+	</div>
+
 </div>
 
-</body>
-</html>

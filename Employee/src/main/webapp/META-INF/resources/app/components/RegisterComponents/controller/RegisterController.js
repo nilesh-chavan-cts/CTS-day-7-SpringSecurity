@@ -21,14 +21,14 @@ angular.module("registerModule")
 		    
 		            if (response.data && response.data.id) {
 		                $scope.message = "Registration Successful!";
-		                
+		               
 		             
 		                setTimeout(function() {
 		                    $state.go("login");
 		                    $scope.$apply(); 
 		                }, 500);
 		            } else {
-		                $scope.message = "Registration Failed!";
+		                $scope.message = response.data.message;
 		            }
 		        })
 		        .catch(function(error){

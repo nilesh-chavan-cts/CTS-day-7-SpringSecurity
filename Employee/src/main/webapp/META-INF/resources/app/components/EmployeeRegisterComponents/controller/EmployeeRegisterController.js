@@ -1,6 +1,6 @@
 angular.module("EmployeeRegisterModule").controller("EmployeeRegisterController", EmployeeRegisterController);
 
-function EmployeeRegisterController($scope, EmployeeFactory) {
+function EmployeeRegisterController($scope, EmployeeFactory,$state) {
     // Initialize employee model
     $scope.employee = {};
 
@@ -15,9 +15,7 @@ function EmployeeRegisterController($scope, EmployeeFactory) {
         EmployeeFactory.addEmployee($scope.employee)
             .then(function(response) {
                 alert("Employee registered successfully!");
-                $scope.employee = {}; // reset form
-                $scope.employeeForm.$setPristine();
-                $scope.employeeForm.$setUntouched();
+                $state.go("home");
             })
             .catch(function(err) {
                 console.error(err);

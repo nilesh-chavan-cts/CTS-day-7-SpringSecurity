@@ -1,7 +1,7 @@
 
 angular.module("loginModule")
 .controller("LoginController", function($scope, EmployeeFactory, $state) {
-
+	console.log("LoginController test");
 	$scope.loginData = {
 		username:'',
 		password:''
@@ -13,16 +13,25 @@ angular.module("loginModule")
 	            .then(function(response) {
 					console.log(response.data);
 					localStorage.setItem("email", response.data.email);
-	                $scope.message = "Login Successful";
+	                
 					if(response.data.role ==="ROLE_ADMIN"){
 						$state.go("admin");
-					}else{
+						$scope.message = "Login Successful";
+					}else if(response.data.role === "ROLE_USER"){
 						$state.go("home");
+						$scope.message = "Login Successful";
+					}else{
+						
+						if(response.data.message ==="wrong password"){
+							$scope.message = response.data.message+" Remaing Attempts : "+response.data.Reaming_Attempts;
+						}else{
+							$scope.message ="Username and password not found";
+						}
 					}
-	              
+				
 	            })
 	            .catch(function(error) {
-	                $scope.message = "Login Failed";
+	                $scope.message = "username and password not found";
 	                console.error(error);
 	            });
 	    };
