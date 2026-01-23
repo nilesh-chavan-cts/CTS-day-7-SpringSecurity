@@ -15,8 +15,6 @@
     <mvc:annotation-driven />
 
     <!-- ✅ CORRECT static resource mapping -->
-  <!-- <mvc:resources mapping="/resources/**" location="/resources/" /> -->
-
 	<mvc:resources mapping="/app/**" location="/META-INF/resources/app/" />
 	
     <!-- Scan Controllers -->

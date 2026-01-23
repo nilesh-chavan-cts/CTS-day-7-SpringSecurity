@@ -1,0 +1,215 @@
+/* =========================
+   GLOBAL RESET & BASE
+========================= */
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f6fb;
+    color: #1f2937;
+}
+
+/* =========================
+   COMMON UTILITIES
+========================= */
+.subtitle {
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 20px;
+}
+
+.message {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.message.success { color: #188038; }
+.message.error { color: #d93025; }
+
+/* =========================
+   BUTTONS
+========================= */
+
+
+/* =========================
+   AUTH PAGES
+========================= */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f1f3f4;
+}
+
+.login-card,
+.register-card,
+.email-card {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    text-align: center;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.logo span { color: #1a73e8; }
+
+/* =========================
+   FORM ELEMENTS
+========================= */
+input,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #dadce0;
+    font-size: 15px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #1a73e8;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f172a;
+    padding: 15px 30px;
+    color: white;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* =========================
+   HERO
+========================= */
+.hero {
+    padding: 50px 30px;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+}
+
+.hero h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+/* =========================
+   CARDS
+========================= */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+    padding: 40px 30px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+    color: #2563eb;
+}
+
+/* =========================
+   IMAGES
+========================= */
+.image-section {
+    padding: 40px 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 20px;
+}
+
+.image-section img {
+    width: 100%;
+    border-radius: 12px;
+}
+
+
+
+/* Ensure Bootstrap modal centers correctly */
+.modal.fade {
+    display: none; /* Bootstrap handles visibility */
+}
+.modal.show {
+    display: block;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+    background: #0f172a;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.footer-links a {
+    margin: 0 10px;
+    color: #93c5fd;
+    text-decoration: none;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 600px) {
+    .login-card,
+    .register-card,
+    .email-card {
+        padding: 25px;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+}

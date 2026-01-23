@@ -13,7 +13,8 @@ angular.module("loginModule")
 	            .then(function(response) {
 					console.log(response.data);
 					localStorage.setItem("email", response.data.email);
-	                
+					localStorage.setItem("token", response.data.token);
+
 					if(response.data.role ==="ROLE_ADMIN"){
 						$state.go("admin");
 						$scope.message = "Login Successful";

@@ -6,7 +6,8 @@ angular.module("myApp", [
     "EmployeeRegisterModule",
     "ui.router",
     "EmailModule",
-    "errorModule"
+    "errorModule",
+	"oc.lazyLoad",
 ])
 .config(function($urlRouterProvider, $httpProvider) {
 

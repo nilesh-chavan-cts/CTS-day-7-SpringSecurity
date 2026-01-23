@@ -1,0 +1,52 @@
+<div class="table-container">
+
+    <!-- Search -->
+    <input type="text"
+           class="search-input mb-3"
+           ng-model="searchText"
+           placeholder="Search employees...">
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First</th>
+                <th>Last</th>
+                <th>Email</th>
+                <th>Dept</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="emp in employees | filter:searchText">
+                <td>{{emp.id}}</td>
+                <td>{{emp.firstName}}</td>
+                <td>{{emp.lastName}}</td>
+                <td>{{emp.email}}</td>
+                <td>{{emp.dept}}</td>
+                <td>{{emp.phoneNo}}</td>
+                <td>{{emp.address}}</td>
+                <td>{{emp.role}}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary"
+                        ng-click="onView({emp: emp})">View</button>
+
+                    <button class="btn btn-sm btn-warning"
+                        ng-click="onEdit({emp: emp})">Edit</button>
+
+                    <button class="btn btn-sm btn-danger"
+                        ng-click="onDelete({emp: emp})">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="text-center mt-3"
+       ng-if="employees.length === 0">
+        No employees found.
+    </p>
+</div>

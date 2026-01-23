@@ -7,6 +7,11 @@ function AdminController($scope, $state, EmployeeFactory) {
 	$scope.pageSize = 5;
 	$scope.totalPages = 1;
 
+	$scope.logout = function () {
+	       localStorage.clear();
+	       $state.go("login");
+	   };
+	   
 	$scope.loadEmployees = function(page) {
 		page = page || 0;
 		EmployeeFactory.getEmployees(page, $scope.pageSize)
@@ -105,3 +110,5 @@ function AdminController($scope, $state, EmployeeFactory) {
 		};
 
 	}
+	
+

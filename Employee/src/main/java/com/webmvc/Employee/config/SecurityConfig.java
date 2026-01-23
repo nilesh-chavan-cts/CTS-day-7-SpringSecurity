@@ -2,6 +2,7 @@ package com.webmvc.Employee.config;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,14 +14,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.webmvc.Employee.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+	@Autowired
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -57,39 +63,32 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http.csrf(csrf -> csrf.disable()).cors().and()
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-				.authorizeHttpRequests(
-						auth -> auth
-								.antMatchers("/employee/login").permitAll()
-								.antMatchers("/employee/register").permitAll()
-								.antMatchers("/employee/mail-test/**").permitAll()
-								.antMatchers("/employee/add").hasRole("USER") //
-								.antMatchers("/employee/profile/**").hasRole("USER") //
-								.antMatchers("/employee/update/**").hasAnyRole("USER","ADMIN")
-								.antMatchers("/employee/employee-list").hasRole("ADMIN")
-								.antMatchers("/employee/user").hasRole("ADMIN")
-								.antMatchers("/department").hasRole("ADMIN")
-								.antMatchers("/employee/export/department/**").hasRole("ADMIN")
-								/* .antMatchers("/export/department/**").hasRole("ADMIN") */
-								// 🔓 ANGULAR STATIC FILES (VERY IMPORTANT)
-								.antMatchers("/", "/index.jsp", "/app/**", "/components/**", "/js/**", "/css/**",
-										"/**/*.html", "/**/*.js", "/**/*.css")
-								.permitAll().anyRequest().authenticated())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(auth -> auth.antMatchers("/employee/login").permitAll()
+						.antMatchers("/employee/register").permitAll().antMatchers("/employee/mail-test/**").permitAll()
+						.antMatchers("/employee/add").hasRole("USER") //
+						.antMatchers("/employee/profile/**").hasRole("USER") //
+						.antMatchers("/employee/update/**").hasAnyRole("USER", "ADMIN")
+						.antMatchers("/employee/employee-list").hasRole("ADMIN").antMatchers("/employee/user")
+						.hasRole("ADMIN").antMatchers("/department").hasRole("ADMIN")
+						.antMatchers("/employee/export/department/**").hasRole("ADMIN")
+						/* .antMatchers("/export/department/**").hasRole("ADMIN") */
+						// 🔓 ANGULAR STATIC FILES (VERY IMPORTANT)
+						.antMatchers("/", "/index.jsp", "/app/**", "/components/**", "/js/**", "/css/**", "/**/*.html",
+								"/**/*.js", "/**/*.css")
+						.permitAll().anyRequest().authenticated())
 				
 				
-				 // Add this AccessDeniedHandler
-				.exceptionHandling(exception -> 
-			    exception
-			        .accessDeniedHandler((request, response, accessDeniedException) -> {
-			            // For Angular SPA, return JSON 403 instead of default HTML page
-			            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			            response.setContentType("application/json");
-			            response.getWriter().write("{\"error\":\"Access Denied\"}");
-			        })
-			);
-	
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
-		        
+				// Add this AccessDeniedHandler
+				.exceptionHandling(
+						exception -> exception.accessDeniedHandler((request, response, accessDeniedException) -> {
+							// For Angular SPA, return JSON 403 instead of default HTML page
+							response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+							response.setContentType("application/json");
+							response.getWriter().write("{\"error\":\"Access Denied\"}");
+						}));
 
 		return http.build();
 	}

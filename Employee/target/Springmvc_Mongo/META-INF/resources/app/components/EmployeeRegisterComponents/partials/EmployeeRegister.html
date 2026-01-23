@@ -1,0 +1,100 @@
+
+<di class="auth-page">
+
+	<div
+		class="d-flex justify-content-center align-items-start min-vh-100 py-5">
+		<div class="card shadow-lg w-100" style="max-width: 600px;">
+			<div class="card-body p-4">
+
+				<h3 class="text-center fw-bold mb-3">Register New Employee</h3>
+				<p class="text-muted text-center mb-4">Fill out the employee
+					details</p>
+
+				<form name="employeeForm" ng-submit="registerEmployee()" novalidate>
+
+					<div class="row g-3 mb-3">
+						<div class="col-md-6">
+							<div class="form-floating">
+								<input type="text" class="form-control" id="firstName"
+									placeholder="First Name" ng-model="employee.firstName" required>
+								<label for="firstName">First Name</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-floating">
+								<input type="text" class="form-control" id="lastName"
+									placeholder="Last Name" ng-model="employee.lastName" required>
+								<label for="lastName">Last Name</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-floating mb-3">
+						<input type="email" class="form-control" id="email"
+							placeholder="Email" ng-model="employee.email" required> <label
+							for="email">Email</label>
+					</div>
+
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" id="phoneNo"
+							placeholder="Phone Number" ng-model="employee.phoneNo" required>
+						<label for="phoneNo">Phone Number</label>
+					</div>
+
+					<div class="form-floating mb-3">
+						<select class="form-select" id="dept" ng-model="employee.dept"
+							required>
+							<option value="" disabled selected>Select Department</option>
+							<option value="IT">IT</option>
+							<option value="NON-IT">NON-IT</option>
+						</select> <label for="dept">Department</label>
+					</div>
+
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" id="role"
+							placeholder="Role" ng-model="employee.role" required> <label
+							for="role">Role</label>
+					</div>
+
+					<div class="form-floating mb-3">
+						<input type="number" class="form-control" id="salary"
+							placeholder="Salary" ng-model="employee.salary" required>
+						<label for="salary">Salary</label>
+					</div>
+
+					<div class="form-floating mb-3">
+						<select class="form-select" id="gender" ng-model="employee.gender"
+							required>
+							<option value="" disabled selected>Select Gender</option>
+							<option value="Male">Male</option>
+							<option value="Female">Female</option>
+						</select> <label for="gender">Gender</label>
+					</div>
+
+					<div class="form-floating mb-4">
+						<input type="text" class="form-control" id="address"
+							placeholder="Address" ng-model="employee.address" required>
+						<label for="address">Address</label>
+					</div>
+
+					<div class="d-flex justify-content-center gap-3">
+						<button type="submit" class="btn btn-primary w-50">Register</button>
+						<button type="button" class="btn btn-secondary w-50"
+							ng-click="resetForm()">Cancel</button>
+					</div>
+
+					<!-- AngularJS message -->
+					<div ng-if="message" class="alert mt-3 py-2 text-center"
+						ng-class="{
+                        'alert-success': message.includes('Success'),
+                        'alert-danger': message.includes('Fail')
+                     }">
+						{{ message }}</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+
+</div>
+

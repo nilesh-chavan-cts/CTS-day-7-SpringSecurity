@@ -23,6 +23,7 @@ import com.webmvc.Employee.dtos.Login;
 import com.webmvc.Employee.entity.OTPVerification;
 import com.webmvc.Employee.repository.LoginRepository;
 import com.webmvc.Employee.repository.OTPVerificationRepository;
+import com.webmvc.Employee.security.JwtUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +43,9 @@ public class AuthenticationService {
     @Autowired
     private OTPVerificationRepository otpVerificationRepository;
     
+    @Autowired
+    private JwtUtil jwtUtil;
+
     private static final int MAX_ATTEMPT=5;
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private static final int OTP_LENGTH = 6;
@@ -64,11 +68,6 @@ public class AuthenticationService {
     		SecurityContext context = SecurityContextHolder.createEmptyContext();
     		context.setAuthentication(authentication);
 
-    	
-    		request.getSession(true).setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-    				context);
-
-    		String role = authentication.getAuthorities().iterator().next().getAuthority();
     		
     		obj.setReamingAttempt(MAX_ATTEMPT);
     		obj.setStatus(true);
@@ -76,10 +75,18 @@ public class AuthenticationService {
     		
     		log.info("AuthenticationService : Login Success full...!");
     		
-    		response.put("message", "Login successful");
-    		response.put("email", obj.getEmail());
+    		String role = authentication.getAuthorities().iterator().next().getAuthority();
+
+    		String jwt = jwtUtil.generateToken(
+    		        authentication.getName(),
+    		        role
+    		);
+
+    		response.put("token", jwt);
     		response.put("role", role);
-    		response.put("timestamp", String.valueOf(LocalDateTime.now()));
+    		response.put("email",obj.getEmail());
+    		response.put("message", "Login successful");
+
     		
     		return ResponseEntity.ok(response);
     	}catch(Exception e) {
